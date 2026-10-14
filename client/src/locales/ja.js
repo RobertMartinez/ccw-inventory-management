@@ -6,8 +6,54 @@ export default {
     orders: '注文',
     finance: '財務',
     demandForecast: '需要予測',
+    restock: '補充計画',
     companyName: '触媒コンポーネンツ',
     subtitle: '在庫管理システム'
+  },
+
+  restock: {
+    title: '補充計画',
+    description: '補充が最も必要な品目に予算を配分します',
+    prompt: '予算を入力して「計算」を選択すると補充計画が作成されます。',
+    empty: '選択したカバー期間に対して、すべての品目の在庫は十分です。',
+    budgetInvalid: '0より大きい予算を入力してください。',
+    loadError: '補充提案の読み込みに失敗しました',
+    controls: {
+      budget: '予算',
+      coverage: 'カバー期間',
+      lookback: '需要の参照期間',
+      days: '{count}日',
+      months: '{count}か月',
+      calculate: '計算'
+    },
+    stats: {
+      budget: '予算',
+      allocated: '配分済み',
+      remaining: '残額',
+      totalNeed: '完全補充に必要な総額',
+      funded: '全額充当の品目',
+      partial: '一部充当の品目',
+      unfunded: '未充当の品目'
+    },
+    bar: { label: '配分済み: 予算の{percent}%' },
+    status: { funded: '充当済み', partial: '一部', unfunded: '未充当' },
+    table: {
+      title: '提案一覧',
+      rank: '順位',
+      sku: 'SKU',
+      name: '品名',
+      warehouse: '倉庫',
+      onHand: '在庫数',
+      reorderPoint: '発注点',
+      belowReorder: '下回る',
+      avgDemand: '月平均需要',
+      daysOfCover: '在庫日数',
+      noDemand: '需要なし',
+      recommendedQty: '推奨数 / 必要数',
+      unitCost: '単価',
+      lineCost: '明細金額',
+      status: 'ステータス'
+    }
   },
 
   // Dashboard

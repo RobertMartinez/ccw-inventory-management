@@ -38,6 +38,18 @@ export const api = {
     return response.data
   },
 
+  async getRestockRecommendations({ budget, coverageDays, lookbackMonths, warehouse, category } = {}) {
+    const params = new URLSearchParams()
+    params.append('budget', budget)
+    if (coverageDays) params.append('coverage_days', coverageDays)
+    if (lookbackMonths) params.append('lookback_months', lookbackMonths)
+    if (warehouse && warehouse !== 'all') params.append('warehouse', warehouse)
+    if (category && category !== 'all') params.append('category', category)
+
+    const response = await axios.get(`${API_BASE_URL}/restock/recommendations?${params.toString()}`)
+    return response.data
+  },
+
   async getBacklog() {
     const response = await axios.get(`${API_BASE_URL}/backlog`)
     return response.data

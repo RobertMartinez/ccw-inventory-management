@@ -26,3 +26,14 @@ export function convertAmount(amount, currency = 'USD') {
   }
   return amount
 }
+
+export function convertToUSD(amount, currency = 'USD') {
+  if (currency === 'JPY') {
+    return amount / USD_TO_JPY
+  }
+  return amount
+}
+
+export function currencySymbol(currency = 'USD') {
+  return currency === 'JPY' ? '¥' : '$'
+}

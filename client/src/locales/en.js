@@ -6,8 +6,54 @@ export default {
     orders: 'Orders',
     finance: 'Finance',
     demandForecast: 'Demand Forecast',
+    restock: 'Restock',
     companyName: 'Catalyst Components',
     subtitle: 'Inventory Management System'
+  },
+
+  restock: {
+    title: 'Restock Planner',
+    description: 'Allocate a budget across items most in need of replenishment',
+    prompt: 'Enter a budget and select Calculate to generate a restocking plan.',
+    empty: 'All items have sufficient stock for the selected coverage.',
+    budgetInvalid: 'Enter a budget greater than zero.',
+    loadError: 'Failed to load restock recommendations',
+    controls: {
+      budget: 'Budget',
+      coverage: 'Coverage',
+      lookback: 'Demand lookback',
+      days: '{count} days',
+      months: '{count} months',
+      calculate: 'Calculate'
+    },
+    stats: {
+      budget: 'Budget',
+      allocated: 'Allocated',
+      remaining: 'Remaining',
+      totalNeed: 'Total need to fully restock',
+      funded: 'Items funded',
+      partial: 'Items partially funded',
+      unfunded: 'Items unfunded'
+    },
+    bar: { label: 'Allocated: {percent}% of budget' },
+    status: { funded: 'Funded', partial: 'Partial', unfunded: 'Unfunded' },
+    table: {
+      title: 'Recommendations',
+      rank: 'Rank',
+      sku: 'SKU',
+      name: 'Name',
+      warehouse: 'Warehouse',
+      onHand: 'On hand',
+      reorderPoint: 'Reorder pt',
+      belowReorder: 'Below',
+      avgDemand: 'Avg monthly demand',
+      daysOfCover: 'Days of cover',
+      noDemand: 'No demand',
+      recommendedQty: 'Recommended / need qty',
+      unitCost: 'Unit cost',
+      lineCost: 'Line cost',
+      status: 'Status'
+    }
   },
 
   // Dashboard

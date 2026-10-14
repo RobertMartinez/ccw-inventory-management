@@ -1,7 +1,8 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Optional
 from pydantic import BaseModel
+from restock import apply_filters, build_restock_plan
 from mock_data import inventory_items, orders, demand_forecasts, backlog_items, spending_summary, monthly_spending, category_spending, recent_transactions, purchase_orders
 
 app = FastAPI(title="Factory Inventory Management System")
@@ -29,22 +30,6 @@ def filter_by_month(items: list, month: Optional[str]) -> list:
         return [item for item in items if month in item.get('order_date', '')]
 
     return items
-
-def apply_filters(items: list, warehouse: Optional[str] = None, category: Optional[str] = None,
-                 status: Optional[str] = None) -> list:
-    """Apply common filters to a list of items"""
-    filtered = items
-
-    if warehouse and warehouse != 'all':
-        filtered = [item for item in filtered if item.get('warehouse') == warehouse]
-
-    if category and category != 'all':
-        filtered = [item for item in filtered if item.get('category', '').lower() == category.lower()]
-
-    if status and status != 'all':
-        filtered = [item for item in filtered if item.get('status', '').lower() == status.lower()]
-
-    return filtered
 
 # CORS middleware
 app.add_middleware(
@@ -120,6 +105,40 @@ class CreatePurchaseOrderRequest(BaseModel):
     expected_delivery_date: str
     notes: Optional[str] = None
 
+class RestockRecommendation(BaseModel):
+    rank: int
+    sku: str
+    name: str
+    category: str
+    warehouse: str
+    quantity_on_hand: int
+    reorder_point: int
+    unit_cost: float
+    avg_monthly_demand: float
+    trend_factor: float
+    days_of_cover: Optional[float] = None
+    target_level: int
+    need_qty: int
+    need_cost: float
+    recommended_qty: int
+    line_cost: float
+    status: str
+    below_reorder_point: bool
+
+class RestockPlan(BaseModel):
+    budget: float
+    total_allocated: float
+    remaining_budget: float
+    total_need_cost: float
+    items_funded: int
+    items_partial: int
+    items_unfunded: int
+    items_sufficient: int
+    coverage_days: int
+    lookback_months: int
+    demand_window: List[str]
+    recommendations: List[RestockRecommendation]
+
 # API endpoints
 @app.get("/")
 def root():
@@ -165,6 +184,18 @@ def get_order(order_id: str):
 def get_demand_forecasts():
     """Get demand forecasts"""
     return demand_forecasts
+
+@app.get("/api/restock/recommendations", response_model=RestockPlan)
+def get_restock_recommendations(
+    budget: float = Query(..., ge=0.01, allow_inf_nan=False),
+    coverage_days: int = Query(30, ge=1, le=180),
+    lookback_months: int = Query(3, ge=1, le=12),
+    warehouse: Optional[str] = None,
+    category: Optional[str] = None
+):
+    """Recommend restock quantities for a dollar budget (priority greedy, read-only)"""
+    return build_restock_plan(inventory_items, orders, demand_forecasts, budget,
+                              coverage_days, lookback_months, warehouse, category)
 
 @app.get("/api/backlog", response_model=List[BacklogItem])
 def get_backlog():
